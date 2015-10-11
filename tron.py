@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-screen = pygame.display.set_mode((1000,1003))
+screen = pygame.display.set_mode((1000, 1003))
 
 class LightBike(pygame.sprite.Sprite):
     def __init__(self):
@@ -16,7 +16,7 @@ class LightBike(pygame.sprite.Sprite):
         self.y = 100
         self.prev_pos.append(self.rect.center)
         if len(self.prev_pos) > 1:
-            pygame.draw.aalines(screen,(238,89,0),False,self.prev_pos)
+            pygame.draw.aalines(screen, (238, 89, 0), False, self.prev_pos)
         if len(self.prev_pos) > 100:
             self.prev_pos.pop(0)
         if pygame.key.get_pressed()[pygame.K_RIGHT]:
@@ -24,15 +24,12 @@ class LightBike(pygame.sprite.Sprite):
                 self.image = pygame.image.load('./images/light3.gif')
         elif pygame.key.get_pressed()[pygame.K_DOWN]:
                 self.movedown()
-                
                 self.image = pygame.image.load('./images/light4.gif')
         elif pygame.key.get_pressed()[pygame.K_LEFT]:
                 self.moveleft()
-                
                 self.image = pygame.image.load('./images/light2.gif')
         elif pygame.key.get_pressed()[pygame.K_UP]:
                 self.moveup()
-                
                 self.image = pygame.image.load('./images/light1.gif')
     def movedown(self):
         self.rect.centery += self.speed
