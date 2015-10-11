@@ -10,27 +10,65 @@ class LightBike(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.prev_pos = []
         self.speed = 12
-        
+        self.direction = -2
+        self.images = [pygame.image.load('./images/light1.gif'),
+                        pygame.image.load('./images/light2.gif'),
+                        pygame.image.load('./images/light3.gif'),
+                        pygame.image.load('./images/light4.gif')
+                        ]
+        self.dead = 0
+
     def update(self):
-        self.x = 100
-        self.y = 100
+
+        self.x = self.rect.center[0]
+        self.y = self.rect.center[1]
+
+        if (self.x, self.y) in self.prev_pos and self.direction is not -2:
+            print "x"
+            self.x = 100
+            self.y = 100
+            self.rect.center = (self.x, self.y)
+            self.prev_pos = []
+            self.direction = -2
+
+        print (self.rect.center)
         self.prev_pos.append(self.rect.center)
         if len(self.prev_pos) > 1:
             pygame.draw.aalines(screen, (238, 89, 0), False, self.prev_pos)
         if len(self.prev_pos) > 100:
             self.prev_pos.pop(0)
-        if pygame.key.get_pressed()[pygame.K_RIGHT]:
+
+        print (self.x, self.y)
+        print self.prev_pos 
+
+        pressed_keys = pygame.key.get_pressed()
+        left_key = pressed_keys[pygame.K_LEFT]
+        right_key = pressed_keys[pygame.K_RIGHT]
+        down_key = pressed_keys[pygame.K_DOWN]
+        up_key = pressed_keys[pygame.K_UP]
+
+        if left_key:
+            self.direction = pygame.K_LEFT
+        elif right_key:
+            self.direction = pygame.K_RIGHT
+        elif down_key:
+            self.direction = pygame.K_DOWN
+        elif up_key:
+            self.direction = pygame.K_UP
+
+        if self.direction is pygame.K_RIGHT:
                 self.moveright()
-                self.image = pygame.image.load('./images/light3.gif')
-        elif pygame.key.get_pressed()[pygame.K_DOWN]:
+                self.image = self.images[2]
+        elif self.direction is pygame.K_DOWN:
                 self.movedown()
-                self.image = pygame.image.load('./images/light4.gif')
-        elif pygame.key.get_pressed()[pygame.K_LEFT]:
+                self.image = self.images[3]
+        elif self.direction is pygame.K_LEFT:
                 self.moveleft()
-                self.image = pygame.image.load('./images/light2.gif')
-        elif pygame.key.get_pressed()[pygame.K_UP]:
+                self.image = self.images[1]
+        elif self.direction is pygame.K_UP:
                 self.moveup()
-                self.image = pygame.image.load('./images/light1.gif')
+                self.image = self.images[0]
+
     def movedown(self):
         self.rect.centery += self.speed
     def moveup(self):
@@ -49,6 +87,10 @@ def main():
     while True:
         clock.tick(40)
         pygame.mouse.set_visible(False)
+
+        if lb.dead:
+            return False
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
